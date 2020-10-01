@@ -22,9 +22,12 @@ while True:
             print(chess.actions(board, chess.W, 1))
             user_action_1 = input("Input move in form \"x_1, y_1\": ")
             user_action_2 = input("Input move in form \"x_2, y_2\": ")
-            user_action = [(int(user_action_1.replace(",", "").replace(" ", "")[0]), int(user_action_1.replace(",", "").replace(" ", "")[1])), (int(user_action_2.replace(",", "").replace(" ", "")[0]), int(user_action_2.replace(",", "").replace(" ", "")[1]))]
-            if user_action in chess.actions(board, chess.W, 1):
-                break
+            try:
+                user_action = [(int(user_action_1.replace(",", "").replace(" ", "")[0]), int(user_action_1.replace(",", "").replace(" ", "")[1])), (int(user_action_2.replace(",", "").replace(" ", "")[0]), int(user_action_2.replace(",", "").replace(" ", "")[1]))]
+                if user_action in chess.actions(board, chess.W, 1):
+                    break
+            except IndexError:
+                pass
         board = chess.result(board, user_action)
         board = chess.result(board, chess.minimax(board, 4, -math.inf, math.inf, chess.B))
     if user_player == chess.B:
