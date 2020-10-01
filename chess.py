@@ -371,5 +371,3 @@ def minimax(board, depth, alpha, beta, player):
     for action in actions(board, player, 1):
         if negamax(result(board, action), depth-1, -beta, -alpha, non_player, player) == negamax_value:
             return action
-
-print(minimax(initial_state(), 2, -math.inf, math.inf, W))
