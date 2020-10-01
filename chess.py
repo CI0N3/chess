@@ -289,14 +289,14 @@ def utility(board, player):
                              [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
                              [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]][i][j]
             if board[i][j] == W_N:
-                W_Points += [[3, 3, 3, 3, 3, 3, 3, 3],
-                             [3, 3, 3, 3, 3, 3, 3, 3],
-                             [3, 3, 3, 3, 3, 3, 3, 3],
-                             [3, 3, 3, 3, 3, 3, 3, 3],
-                             [3, 3, 3, 3, 3, 3, 3, 3],
-                             [3, 3, 3.25, 3, 3, 3.25, 3, 3],
-                             [3, 3, 3, 3, 3, 3, 3, 3],
-                             [3, 3, 3, 3, 3, 3, 3, 3]][i][j]
+                W_Points += [[2.5, 3, 3, 3, 3, 3, 3, 2.5],
+                             [2.5, 3, 3, 3, 3, 3, 3, 2.5],
+                             [2.5, 3, 3, 3, 3, 3, 3, 2.5],
+                             [2.5, 3, 3, 3, 3, 3, 3, 2.5],
+                             [2.5, 3, 3, 3, 3, 3, 3, 2.5],
+                             [2.5, 3, 3.5, 3, 3, 3.5, 3, 2.5],
+                             [2.5, 3, 3, 3, 3, 3, 3, 2.5],
+                             [2.5, 3, 3, 3, 3, 3, 3, 2.5]][i][j]
             if board[i][j] == W_B:
                 W_Points += [[3, 3, 3, 3, 3, 3, 3, 3],
                              [3, 3, 3, 3, 3, 3, 3, 3],
@@ -320,14 +320,14 @@ def utility(board, player):
                              [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
                              [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]][i][j]
             if board[i][j] == B_N:
-                B_Points += [[3, 3, 3, 3, 3, 3, 3, 3],
-                             [3, 3, 3, 3, 3, 3, 3, 3],
-                             [3, 3, 3.25, 3, 3, 3.25, 3, 3],
-                             [3, 3, 3, 3, 3, 3, 3, 3],
-                             [3, 3, 3, 3, 3, 3, 3, 3],
-                             [3, 3, 3, 3, 3, 3, 3, 3],
-                             [3, 3, 3, 3, 3, 3, 3, 3],
-                             [3, 3, 3, 3, 3, 3, 3, 3]][i][j]
+                B_Points += [[2.5, 3, 3, 3, 3, 3, 3, 2.5],
+                             [2.5, 3, 3, 3, 3, 3, 3, 2.5],
+                             [2.5, 3, 3.5, 3, 3, 3.5, 3, 2.5],
+                             [2.5, 3, 3, 3, 3, 3, 3, 2.5],
+                             [2.5, 3, 3, 3, 3, 3, 3, 2.5],
+                             [2.5, 3, 3, 3, 3, 3, 3, 2.5],
+                             [2.5, 3, 3, 3, 3, 3, 3, 2.5],
+                             [2.5, 3, 3, 3, 3, 3, 3, 2.5]][i][j]
             if board[i][j] == B_B:
                 B_Points += [[3, 3, 3, 3, 3, 3, 3, 3],
                              [3, 3.75, 3, 3, 3, 3, 3.75, 3],
@@ -367,7 +367,6 @@ def minimax(board, depth, alpha, beta, player):
         value = -math.inf
         for action in actions(board, player, 1):
             value = max(value, negamax(result(board, action), depth-1, -beta, -alpha, non_player, player))  # problem with -minimax(result(board, action), depth-1, -beta, -alpha, non_player) returns None
-
             alpha = max(alpha, value)
             if alpha >= beta:
                 break
@@ -376,7 +375,7 @@ def minimax(board, depth, alpha, beta, player):
     negamax_value = (negamax(board, depth, alpha, beta, player, non_player))
     for i in range(depth):
         for action in actions(board, player, 1):
-            if -negamax(result(board, action), i, alpha, beta, non_player, player) == negamax_value:
+            if negamax(result(board, action), i, alpha, beta, non_player, player) == negamax_value:
                 return action
 
-#print(minimax(initial_state(), 2, -math.inf, math.inf, B))
+#print(minimax(initial_state(), 4, -math.inf, math.inf, B))
