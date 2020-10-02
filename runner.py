@@ -29,9 +29,9 @@ while True:
             except IndexError:
                 pass
         board = chess.result(board, user_action)
-        board = chess.result(board, chess.minimax(board, 4, -math.inf, math.inf, chess.B))
+        board = chess.result(board, chess.minimax(board, 3, -math.inf, math.inf, chess.B))
     if user_player == chess.B:
-        board = chess.result(board, chess.minimax(board, 4, -math.inf, math.inf, chess.W))
+        board = chess.result(board, chess.minimax(board, 3, -math.inf, math.inf, chess.W))
         print(chess.print_board(board))
         while True:
             print(chess.actions(board, chess.B, 1))
