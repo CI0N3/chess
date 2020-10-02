@@ -95,6 +95,13 @@ def actions(board, player, depth):
     else:
         non_player = W
 
+    """""
+    if player == W and board[7][4] == W_K:
+        if board[7][0] == W_R and board[7][1] == board[7][2] == board[7][3] == E:
+            if check(board, W):
+                if check(result(board, [(7, 4), (7, 3)]), W) and check(result(board, [(7, 4), (7, 2)]), W):
+                    actions += [(7, 4), (7, 2)]
+    """""
     for i in range(8):
         for j in range(8):
             if board[i][j] not in non_player and board[i][j] != E:
@@ -234,7 +241,6 @@ def actions(board, player, depth):
                                         actions += [[(i, j), (i + k - 1, j + l - 1)]]
                             except IndexError:
                                 pass
-
     return actions
 
 
