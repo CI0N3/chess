@@ -95,13 +95,23 @@ def actions(board, player, depth):
     else:
         non_player = W
 
-    """""
-    if player == W and board[7][4] == W_K:
-        if board[7][0] == W_R and board[7][1] == board[7][2] == board[7][3] == E:
-            if check(board, W):
+    if player == W and board[7][4] == W_K and depth == 1:
+        if check(board, W):
+            if board[7][0] == W_R and board[7][1] == board[7][2] == board[7][3] == E:
                 if check(result(board, [(7, 4), (7, 3)]), W) and check(result(board, [(7, 4), (7, 2)]), W):
-                    actions += [(7, 4), (7, 2)]
-    """""
+                    actions += [[(7, 4), (7, 2)]]
+            if board[7][7] == W_R and board[7][5] == board[7][6] == E:
+                if check(result(board, [(7, 4), (7, 5)]), W) and check(result(board, [(7, 4), (7, 6)]), W):
+                    actions += [[(7, 4), (7, 6)]]
+    elif player == B and board[0][4] == B_K and depth == 1:
+        if check(board, B):
+            if board[0][0] == B_R and board[0][1] == board[0][2] == board[0][3] == E:
+                if check(result(board, [(0, 4), (0, 3)]), B) and check(result(board, [(0, 4), (0, 2)]), B):
+                    actions += [[(0, 4), (0, 2)]]
+            if board[0][7] == B_R and board[0][5] == board[0][6] == E:
+                if check(result(board, [(0, 4), (0, 5)]), B) and check(result(board, [(0, 4), (0, 6)]), B):
+                    actions += [[(0, 4), (0, 6)]]
+
     for i in range(8):
         for j in range(8):
             if board[i][j] not in non_player and board[i][j] != E:
@@ -252,11 +262,30 @@ def result(board, action):
         for j in range(8):
             if i != action[0][0] or j != action[0][1]:
                 if i != action[1][0] or j != action[1][1]:
-                    row_result += [board[i][j]]
+                    #print()
+                    if board[action[0][0]][action[0][1]] in [W_K, B_K] and abs(action[0][1] - action[1][1]) == 2 and i == action[0][0] and j in [0, 3, 5, 7]:
+                        if action[1][1] == 2 and j == 0:
+                            row_result += E
+                        elif action[1][1] == 2 and j == 3:
+                            if action[0][0] == 7:
+                                row_result += W_R
+                            else:
+                                row_result += B_R
+                        elif action[1][1] == 6 and j == 5:
+                            if action[0][0] == 7:
+                                row_result += W_R
+                            else:
+                                row_result += B_R
+                        elif action[1][1] == 6 and j == 7:
+                            row_result += E
+                        else:
+                            row_result += [board[i][j]]
+                    else:
+                        row_result += [board[i][j]]  # every other space stays the same
                 else:
-                    row_result += [board[action[0][0]][action[0][1]]]
+                    row_result += [board[action[0][0]][action[0][1]]]  # replaces new piece's space with original space
             else:
-                row_result += [E]
+                row_result += [E]  # replaces original piece's space with an empty space
             if j == 7:
                 final_result += [row_result]
 
@@ -362,7 +391,7 @@ def minimax(board, depth, alpha, beta, player):
 
         value = -math.inf
         for action in actions(board, player, 1):
-            value = max(value, -negamax(result(board, action), depth-1, -beta, -alpha, non_player, player))  # problem with -minimax(result(board, action), depth-1, -beta, -alpha, non_player) returns None
+            value = max(value, -negamax(result(board, action), depth-1, -beta, -alpha, non_player, player))
             alpha = max(alpha, value)
             if alpha >= beta:
                 break
