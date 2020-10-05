@@ -27,24 +27,14 @@ def print_board(board):
 
 
 def initial_state():
-    return [[E, E, E, E, E, E, E, E],
-            [E, E, E, E, E, E, E, E],
-            [E, E, E, E, E, E, E, E],
-            [E, E, E, E, E, E, E, E],
-            [E, E, E, E, E, E, E, E],
-            [E, E, B_K, E, E, E, E, E],
-            [E, E, E, E, E, E, E, B_Q],
-            [W_K, E, E, E, E, E, E, E]]
-    """""
     return [[B_R, B_N, B_B, B_Q, B_K, B_B, B_N, B_R],
             [B_P, B_P, B_P, B_P, B_P, B_P, B_P, B_P],
             [E, E, E, E, E, E, E, E],
             [E, E, E, E, E, E, E, E],
             [E, E, E, E, E, E, E, E],
             [E, E, E, E, E, E, E, E],
-            [W_P, W_P, W_P, W_P, W_P, E, W_P, W_P],
-            [W_R, E, E, E, W_K, E, E, W_R]]
-    """""
+            [W_P, W_P, W_P, W_P, W_P, W_P, W_P, W_P],
+            [W_R, W_N, W_B, W_Q, W_K, W_B, W_N, W_R]]
 
 
 def check(board, player):
@@ -439,8 +429,6 @@ def utility(board):
             if board[i][j] == B_Q:
                 B_Points += 9
     # Returns a positive number if white is winning, negative number if black is winning in terms of pieces
-    #print(W_Points)
-    #print(B_Points)
     return W_Points - B_Points
 
 
