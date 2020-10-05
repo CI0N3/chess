@@ -27,14 +27,14 @@ def print_board(board):
 
 
 def initial_state():
-    return [[B_R, E, E, E, B_K, E, E, B_R],
-            [B_P, E, E, E, E, E, E, B_P],
+    return [[E, E, E, E, E, E, E, E],
             [E, E, E, E, E, E, E, E],
             [E, E, E, E, E, E, E, E],
             [E, E, E, E, E, E, E, E],
             [E, E, E, E, E, E, E, E],
-            [E, E, E, E, E, E, E, E],
-            [W_R, E, E, E, W_K, E, E, W_R]]
+            [E, E, B_K, E, E, E, E, E],
+            [E, E, E, E, E, E, E, B_Q],
+            [W_K, E, E, E, E, E, E, E]]
     """""
     return [[B_R, B_N, B_B, B_Q, B_K, B_B, B_N, B_R],
             [B_P, B_P, B_P, B_P, B_P, B_P, B_P, B_P],
