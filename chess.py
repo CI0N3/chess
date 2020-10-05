@@ -27,14 +27,14 @@ def print_board(board):
 
 
 def initial_state():
-    return [[B_R, B_N, B_B, B_Q, B_K, B_B, B_N, B_R],
-            [B_P, B_P, B_P, B_P, B_P, B_P, B_P, B_P],
-            [E, E, E, E, E, E, E, E],
-            [E, E, E, E, E, E, E, E],
-            [E, E, E, E, E, E, E, E],
-            [E, E, E, E, E, E, E, E],
-            [W_P, W_P, W_P, W_P, W_P, W_P, W_P, W_P],
-            [W_R, W_N, W_B, W_Q, W_K, W_B, W_N, W_R]]
+    return [[B_R, E, B_B, B_Q, B_K, B_B, E, B_R],
+            [B_P, B_P, B_P, B_P, E, B_P, B_P, B_P],
+            [E, E, B_N, E, E, B_N, E, E],
+            [E, E, E, E, B_P, E, E, E],
+            [E, E, W_B, E, W_P, E, E, E],
+            [E, E, E, E, E, W_N, E, E],
+            [W_P, W_P, W_P, W_P, E, W_P, W_P, W_P],
+            [W_R, W_N, W_B, W_Q, W_K, W_B, E, W_R]]
 
 
 def check(board, player):
@@ -348,8 +348,8 @@ def utility(board):
 
     for i in range(8):
         for j in range(8):
-            if W_K in [board[7][2], board[7][6]] and i == 7 and j in [2, 6]:
-                W_Points += 1
+            if W_K in [board[7][2], board[7][6]] and i == 7 and j == 2:
+                W_Points += 0.75
             if board[i][j] == W_P:
                 W_Points += [[0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
                              [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
@@ -378,18 +378,11 @@ def utility(board):
                              [3, 3.75, 3, 3, 3, 3, 3.75, 3],
                              [3, 3, 3, 3, 3, 3, 3, 3]][i][j]
             if board[i][j] == W_R:
-                W_Points += [[4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5],
-                             [4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5],
-                             [4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5],
-                             [4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5],
-                             [4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5],
-                             [4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5],
-                             [4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5],
-                             [4.5, 4.5, 4.5, 5.5, 5.5, 5.5, 4.5, 4.5]][i][j]
+                W_Points += 5
             if board[i][j] == W_Q:
                 W_Points += 9
-            if B_K in [board[0][2], board[0][6]] and i == 0 and j in [2, 6]:
-                B_Points += 1
+            if B_K in [board[0][2], board[0][6]] and i == 0 and j == 2:
+                B_Points += 0.75
             if board[i][j] == B_P:
                 B_Points += [[0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
                              [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
@@ -418,14 +411,7 @@ def utility(board):
                              [3, 3, 3, 3, 3, 3, 3, 3],
                              [3, 3, 3, 3, 3, 3, 3, 3]][i][j]
             if board[i][j] == B_R:
-                B_Points += [[4.5, 4.5, 4.5, 5.5, 5.5, 5.5, 4.5, 4.5],
-                             [4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5],
-                             [4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5],
-                             [4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5],
-                             [4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5],
-                             [4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5],
-                             [4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5],
-                             [4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5, 4.5]][i][j]
+                B_Points += 5
             if board[i][j] == B_Q:
                 B_Points += 9
     # Returns a positive number if white is winning, negative number if black is winning in terms of pieces
@@ -445,6 +431,8 @@ def minimax(board, depth, alpha, beta, player, player_moves, non_player_moves):
             if player == W:
                 return utility(board)
             else:
+                #print(print_board(board))
+                #print(-utility(board))
                 return -utility(board)
 
         value = -math.inf
@@ -462,6 +450,7 @@ def minimax(board, depth, alpha, beta, player, player_moves, non_player_moves):
         non_player = W
 
     negamax_value = negamax(board, depth, alpha, beta, player, non_player, player_moves, non_player_moves)
+    #print(negamax_value)
     for action in actions(board, player, 1, player_moves):
         new_player_moves = player_moves + [action]
         if -negamax(result(board, action), depth-1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves) == negamax_value:

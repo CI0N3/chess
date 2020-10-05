@@ -2,6 +2,7 @@ import chess
 import math
 
 board = chess.initial_state()
+depth = 4  # Change this number to increase/decrease how many moves ahead the ai looks
 white_moves = []
 black_moves = []
 
@@ -31,14 +32,14 @@ while True:
             break
         while True:
             print(possible_user_actions)
-            user_action_1 = input("Input move in form \"x_1, y_1\": ")
-            user_action_2 = input("Input move in form \"x_2, y_2\": ")
+            user_action_1 = input("Input move \"x_1 y_1\": ")
+            user_action_2 = input("Input move \"x_2 y_2\": ")
             user_action = [(int(user_action_1.replace(",", "").replace(" ", "")[0]), int(user_action_1.replace(",", "").replace(" ", "")[1])), (int(user_action_2.replace(",", "").replace(" ", "")[0]), int(user_action_2.replace(",", "").replace(" ", "")[1]))]
             if user_action in chess.actions(board, chess.W, 1, white_moves):
                 white_moves += [user_action]
                 break
         board = chess.result(board, user_action)
-        ai_action = chess.minimax(board, 2, -math.inf, math.inf, chess.B, black_moves, white_moves)
+        ai_action = chess.minimax(board, depth, -math.inf, math.inf, chess.B, black_moves, white_moves)
         if not ai_action:
             print(chess.print_board(board))
             if chess.utility(board) == math.inf:
@@ -51,7 +52,7 @@ while True:
         black_moves += [ai_action]
         board = chess.result(board, ai_action)
     if user_player == chess.B:
-        ai_action = chess.minimax(board, 2, -math.inf, math.inf, chess.W, white_moves, black_moves)
+        ai_action = chess.minimax(board, depth, -math.inf, math.inf, chess.W, white_moves, black_moves)
         if not ai_action:
             print(chess.print_board(board))
             if chess.utility(board) == math.inf:
