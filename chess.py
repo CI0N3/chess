@@ -34,7 +34,7 @@ def initial_state():
             [E, E, W_B, E, W_P, E, E, E],
             [E, E, E, E, E, W_N, E, E],
             [W_P, W_P, W_P, W_P, E, W_P, W_P, W_P],
-            [W_R, W_N, W_B, W_Q, W_K, W_B, E, W_R]]
+            [W_R, W_N, W_B, W_Q, W_K, E, E, W_R]]
 
 
 def check(board, player):
@@ -139,18 +139,18 @@ def actions(board, player, depth, moves):
     if player == W and board[7][4] == W_K and depth == 1 and (queen_side_castle or king_side_castle):
         if check(board, W):
             if board[7][0] == W_R and board[7][1] == board[7][2] == board[7][3] == E and queen_side_castle:
-                if check(result(board, [(7, 4), (7, 3)]), W) and check(result(board, [(7, 4), (7, 2)]), W):
+                if check(result(board, [(7, 4), (7, 3)], None), W) and check(result(board, [(7, 4), (7, 2)], None), W):
                     actions += [[(7, 4), (7, 2)]]
             if board[7][7] == W_R and board[7][5] == board[7][6] == E and king_side_castle:
-                if check(result(board, [(7, 4), (7, 5)]), W) and check(result(board, [(7, 4), (7, 6)]), W):
+                if check(result(board, [(7, 4), (7, 5)], None), W) and check(result(board, [(7, 4), (7, 6)], None), W):
                     actions += [[(7, 4), (7, 6)]]
     elif player == B and board[0][4] == B_K and depth == 1 and (queen_side_castle or king_side_castle):
         if check(board, B):
             if board[0][0] == B_R and board[0][1] == board[0][2] == board[0][3] == E and queen_side_castle:
-                if check(result(board, [(0, 4), (0, 3)]), B) and check(result(board, [(0, 4), (0, 2)]), B):
+                if check(result(board, [(0, 4), (0, 3)], None), B) and check(result(board, [(0, 4), (0, 2)], None), B):
                     actions += [[(0, 4), (0, 2)]]
             if board[0][7] == B_R and board[0][5] == board[0][6] == E and king_side_castle:
-                if check(result(board, [(0, 4), (0, 5)]), B) and check(result(board, [(0, 4), (0, 6)]), B):
+                if check(result(board, [(0, 4), (0, 5)], None), B) and check(result(board, [(0, 4), (0, 6)], None), B):
                     actions += [[(0, 4), (0, 6)]]
 
     for i in range(8):
@@ -161,7 +161,7 @@ def actions(board, player, depth, moves):
                         if action_line:
                             for action in action_line:
                                 if depth == 1:
-                                    if check(result(board, action), player):
+                                    if check(result(board, action, None), player):
                                         actions += [action]
                                 else:
                                     actions += [action]
@@ -171,7 +171,7 @@ def actions(board, player, depth, moves):
                         if action_line:
                             for action in action_line:
                                 if depth == 1:
-                                    if check(result(board, action), player):
+                                    if check(result(board, action, None), player):
                                         actions += [action]
                                 else:
                                     actions += [action]
@@ -182,7 +182,7 @@ def actions(board, player, depth, moves):
                             if board[5][j] == E:
                                 if board[4][j] == E:
                                     if depth == 1:
-                                        if check(result(board, [(i, j), (4, j)]), W):
+                                        if check(result(board, [(i, j), (4, j)], None), W):
                                             actions += [[(i, j), (4, j)]]
                                     else:
                                         actions += [[(i, j), (4, j)]]
@@ -192,7 +192,7 @@ def actions(board, player, depth, moves):
                         if j - 1 > -1:
                             if board[i - 1][j - 1] in B:
                                 if depth == 1:
-                                    if check(result(board, [(i, j), (i - 1, j - 1)]), W):
+                                    if check(result(board, [(i, j), (i - 1, j - 1)], None), W):
                                         actions += [[(i, j), (i - 1, j - 1)]]
                                 else:
                                     actions += [[(i, j), (i - 1, j - 1)]]
@@ -202,7 +202,7 @@ def actions(board, player, depth, moves):
                         if j + 1 < 8:
                             if board[i - 1][j + 1] in B:
                                 if depth == 1:
-                                    if check(result(board, [(i, j), (i - 1, j + 1)]), W):
+                                    if check(result(board, [(i, j), (i - 1, j + 1)], None), W):
                                         actions += [[(i, j), (i - 1, j + 1)]]
                                 else:
                                     actions += [[(i, j), (i - 1, j + 1)]]
@@ -211,7 +211,7 @@ def actions(board, player, depth, moves):
                     try:
                         if board[i - 1][j] == E:
                             if depth == 1:
-                                if check(result(board, [(i, j), (i - 1, j)]), W):
+                                if check(result(board, [(i, j), (i - 1, j)], None), W):
                                     actions += [[(i, j), (i - 1, j)]]
                             else:
                                 actions += [[(i, j), (i - 1, j)]]
@@ -224,7 +224,7 @@ def actions(board, player, depth, moves):
                             if board[2][j] == E:
                                 if board[3][j] == E:
                                     if depth == 1:
-                                        if check(result(board, [(i, j), (3, j)]), B):
+                                        if check(result(board, [(i, j), (3, j)], None), B):
                                             actions += [[(i, j), (3, j)]]
                                     else:
                                         actions += [[(i, j), (3, j)]]
@@ -234,7 +234,7 @@ def actions(board, player, depth, moves):
                         if j - 1 > -1:
                             if board[i + 1][j - 1] in W:
                                 if depth == 1:
-                                    if check(result(board, [(i, j), (i + 1, j - 1)]), B):
+                                    if check(result(board, [(i, j), (i + 1, j - 1)], None), B):
                                         actions += [[(i, j), (i + 1, j - 1)]]
                                 else:
                                     actions += [[(i, j), (i + 1, j - 1)]]
@@ -244,7 +244,7 @@ def actions(board, player, depth, moves):
                         if j + 1 < 8:
                             if board[i + 1][j + 1] in W:
                                 if depth == 1:
-                                    if check(result(board, [(i, j), (i + 1, j + 1)]), B):
+                                    if check(result(board, [(i, j), (i + 1, j + 1)], None), B):
                                         actions += [[(i, j), (i + 1, j + 1)]]
                                 else:
                                     actions += [[(i, j), (i + 1, j + 1)]]
@@ -253,7 +253,7 @@ def actions(board, player, depth, moves):
                     try:
                         if board[i + 1][j] == E:
                             if depth == 1:
-                                if check(result(board, [(i, j), (i + 1, j)]), B):
+                                if check(result(board, [(i, j), (i + 1, j)], None), B):
                                     actions += [[(i, j), (i + 1, j)]]
                             else:
                                 actions += [[(i, j), (i + 1, j)]]
@@ -265,7 +265,7 @@ def actions(board, player, depth, moves):
                         if -1 < action[0] < 8 and -1 < action[1] < 8:
                             if board[action[0]][action[1]] not in player:
                                 if depth == 1:
-                                    if check(result(board, [(i, j), action]), player):
+                                    if check(result(board, [(i, j), action], None), player):
                                         actions += [[(i, j), action]]
                                 else:
                                     actions += [[(i, j), action]]
@@ -275,7 +275,7 @@ def actions(board, player, depth, moves):
                         if action_line:
                             for action in action_line:
                                 if depth == 1:
-                                    if check(result(board, action), player):
+                                    if check(result(board, action, None), player):
                                         actions += [action]
                                 else:
                                     actions += [action]
@@ -286,7 +286,7 @@ def actions(board, player, depth, moves):
                             try:
                                 if board[i + k - 1][j + l - 1] not in player and i+k-1 > -1 and j+l-1 > -1:
                                     if depth == 1:
-                                        if check(result(board, [(i, j), (i+k-1, j+l-1)]), player):
+                                        if check(result(board, [(i, j), (i+k-1, j+l-1)], None), player):
                                             actions += [[(i, j), (i+k-1, j+l-1)]]
                                     else:
                                         actions += [[(i, j), (i + k - 1, j + l - 1)]]
@@ -295,8 +295,14 @@ def actions(board, player, depth, moves):
     return actions
 
 
-def result(board, action):
+def result(board, action, promotion):
     final_result = []
+
+    if not promotion:
+        if board[action[0][0]][action[0][1]] in W:
+            promotion = W_Q
+        else:
+            promotion = B_Q
 
     for i in range(8):
         row_result = []
@@ -323,7 +329,10 @@ def result(board, action):
                     else:
                         row_result += [board[i][j]]  # every other space stays the same
                 else:
-                    row_result += [board[action[0][0]][action[0][1]]]  # replaces new piece's space with original space
+                    if board[action[0][0]][action[0][1]] == W_P and action[1][0] == 0 or board[action[0][0]][action[0][1]] == B_P and action[1][0] == 7:
+                        row_result += [promotion]
+                    else:
+                        row_result += [board[action[0][0]][action[0][1]]]  # replaces new piece's space with original piece
             else:
                 row_result += [E]  # replaces original piece's space with an empty space
             if j == 7:
@@ -348,7 +357,7 @@ def utility(board):
 
     for i in range(8):
         for j in range(8):
-            if W_K in [board[7][2], board[7][6]] and i == 7 and j == 2:
+            if board[i][j] == W_K and i == 7 and j in [2, 7]:
                 W_Points += 0.75
             if board[i][j] == W_P:
                 W_Points += [[0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
@@ -381,7 +390,7 @@ def utility(board):
                 W_Points += 5
             if board[i][j] == W_Q:
                 W_Points += 9
-            if B_K in [board[0][2], board[0][6]] and i == 0 and j == 2:
+            if board[i][j] == B_K and i == 0 and j in [2, 7]:
                 B_Points += 0.75
             if board[i][j] == B_P:
                 B_Points += [[0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
@@ -427,18 +436,25 @@ def terminal(board, player):
 def minimax(board, depth, alpha, beta, player, player_moves, non_player_moves):
 
     def negamax(board, depth, alpha, beta, player, non_player, player_moves, non_player_moves):
+        promotion = None
         if depth == 0 or terminal(board, player):
             if player == W:
                 return utility(board)
             else:
-                #print(print_board(board))
-                #print(-utility(board))
                 return -utility(board)
 
         value = -math.inf
         for action in actions(board, player, 1, player_moves):
             new_player_moves = player_moves + [action]
-            value = max(value, -negamax(result(board, action), depth-1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves))
+            if (board[action[0][0]][action[0][1]] == W_P and action[1][0] == 0) or (board[action[0][0]][action[0][1]] == B_P and action[1][0] == 7):
+                if action[1][0] == 0:
+                    for promotion in [W_N, W_B, W_R, W_Q]:
+                        value = max(value, -negamax(result(board, action, promotion), depth - 1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves))
+                else:
+                    for promotion in [B_N, B_B, B_R, B_Q]:
+                        value = max(value, -negamax(result(board, action, promotion), depth - 1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves))
+            else:
+                value = max(value, -negamax(result(board, action, promotion), depth-1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves))
             alpha = max(alpha, value)
             if alpha >= beta:
                 break
@@ -450,8 +466,18 @@ def minimax(board, depth, alpha, beta, player, player_moves, non_player_moves):
         non_player = W
 
     negamax_value = negamax(board, depth, alpha, beta, player, non_player, player_moves, non_player_moves)
-    #print(negamax_value)
     for action in actions(board, player, 1, player_moves):
         new_player_moves = player_moves + [action]
-        if -negamax(result(board, action), depth-1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves) == negamax_value:
-            return action
+        if (board[action[0][0]][action[0][1]] == W_P and action[1][0] == 0) or (board[action[0][0]][action[0][1]] == B_P and action[1][0] == 7):
+            if action[1][0] == 0:
+                for promotion in [W_N, W_B, W_R, W_Q]:
+                    if -negamax(result(board, action, promotion), depth - 1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves) == negamax_value:
+                        return [action, promotion]
+            else:
+                for promotion in [B_P, B_B, B_R, B_Q]:
+                    if -negamax(result(board, action, promotion), depth - 1, -beta, -alpha, non_player, player,
+                                non_player_moves, new_player_moves) == negamax_value:
+                        return [action, promotion]
+        else:
+            if -negamax(result(board, action, None), depth-1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves) == negamax_value:
+                return [action, None]
