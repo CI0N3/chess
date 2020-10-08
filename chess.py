@@ -398,8 +398,6 @@ def utility(board, white_moves, black_moves):
 
     for i in range(8):
         for j in range(8):
-            if board[i][j] == W_K and i == 7 and j in [2, 7]:
-                W_Points += 0.5
             if board[i][j] == W_P:
                 W_Points += [[1, 1, 1, 1.5, 1.5, 1, 1, 1],
                              [0.75, 0.75, 0.75, 1.3, 1.3, 0.75, 0.75, 0.75],
@@ -431,8 +429,6 @@ def utility(board, white_moves, black_moves):
                 W_Points += 5
             if board[i][j] == W_Q:
                 W_Points += 9
-            if board[i][j] == B_K and i == 0 and j in [2, 7]:
-                B_Points += 0.5
             if board[i][j] == B_P:
                 B_Points += [[0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
                              [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
@@ -465,6 +461,16 @@ def utility(board, white_moves, black_moves):
             if board[i][j] == B_Q:
                 B_Points += 9
     # Returns a positive number if white is winning, negative number if black is winning in terms of pieces
+    for move in white_moves:
+        if move[0] == (7, 4):
+            if move[1] in [(7, 2), (7, 6)]:
+                W_Points += 0.75
+            break
+    for move in black_moves:
+        if move[0] == (0, 4):
+            if move[1] in [(0, 2), (0, 6)]:
+                B_Points += 0.75
+            break
     return W_Points - B_Points
 
 
@@ -476,28 +482,47 @@ def terminal(board, player, player_moves, non_player_moves):
 
 def minimax(board, depth, alpha, beta, player, player_moves, non_player_moves):
 
-    def negamax(board, depth, alpha, beta, player, non_player, player_moves, non_player_moves):
-        if depth == 0 or terminal(board, player, player_moves, non_player_moves):
+    def negamax(board, new_depth, alpha, beta, player, non_player, player_moves, non_player_moves):
+        if new_depth == 0 or terminal(board, player, player_moves, non_player_moves):
             if player == W:
-                return utility(board, player_moves, non_player_moves) * (depth+1)
+                return utility(board, player_moves, non_player_moves) * (new_depth+1)
             else:
-                return -utility(board, non_player_moves, player_moves) * (depth+1)
+                return -utility(board, non_player_moves, player_moves) * (new_depth+1)
 
+        new_action = []
         value = -math.inf
         for action in actions(board, player, 1, player_moves, non_player_moves):
             new_player_moves = player_moves + [action]
             if (board[action[0][0]][action[0][1]] == W_P and action[1][0] == 0) or (board[action[0][0]][action[0][1]] == B_P and action[1][0] == 7):
                 if action[1][0] == 0:
                     for promotion in [W_N, W_B, W_R, W_Q]:
-                        value = max(value, -negamax(result(board, action, promotion), depth - 1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves))
+                        new_negamax_value = -negamax(result(board, action, promotion), new_depth-1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves)
+                        if new_negamax_value > value:
+                            value = new_negamax_value
+                            new_action = action, promotion
+                        alpha = max(alpha, value)
+                        if alpha >= beta:
+                            break
                 else:
                     for promotion in [B_N, B_B, B_R, B_Q]:
-                        value = max(value, -negamax(result(board, action, promotion), depth - 1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves))
+                        new_negamax_value = -negamax(result(board, action, promotion), new_depth-1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves)
+                        if new_negamax_value > value:
+                            value = new_negamax_value
+                            new_action = action, promotion
+                        alpha = max(alpha, value)
+                        if alpha >= beta:
+                            break
             else:
-                value = max(value, -negamax(result(board, action, None), depth-1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves))
-            alpha = max(alpha, value)
-            if alpha >= beta:
-                break
+                new_negamax_value = -negamax(result(board, action, None), new_depth-1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves)
+                if new_negamax_value > value:
+                    value = new_negamax_value
+                    new_action = action, None
+                alpha = max(alpha, value)
+                if alpha >= beta:
+                    break
+
+        if new_depth == depth:
+            return new_action
         return value
 
     if player == W:
@@ -506,17 +531,4 @@ def minimax(board, depth, alpha, beta, player, player_moves, non_player_moves):
         non_player = W
 
     negamax_value = negamax(board, depth, alpha, beta, player, non_player, player_moves, non_player_moves)
-    for action in actions(board, player, 1, player_moves, non_player_moves):
-        new_player_moves = player_moves + [action]
-        if (board[action[0][0]][action[0][1]] == W_P and action[1][0] == 0) or (board[action[0][0]][action[0][1]] == B_P and action[1][0] == 7):
-            if action[1][0] == 0:
-                for promotion in [W_N, W_B, W_R, W_Q]:
-                    if -negamax(result(board, action, promotion), depth-1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves) == negamax_value:
-                        return [action, promotion]
-            else:
-                for promotion in [B_P, B_B, B_R, B_Q]:
-                    if -negamax(result(board, action, promotion), depth-1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves) == negamax_value:
-                        return [action, promotion]
-        else:
-            if -negamax(result(board, action, None), depth-1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves) == negamax_value:
-                return [action, None]
+    return negamax_value
