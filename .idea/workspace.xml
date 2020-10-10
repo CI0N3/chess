@@ -4,6 +4,7 @@
     <list default="true" id="4970679c-2208-411a-a3c1-466fe355d76a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chess.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/runner.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,8 +17,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/runner.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="75" column="103" selection-start-line="75" selection-start-column="103" selection-end-line="75" selection-end-column="103" />
+            <state relative-caret-position="579">
+              <caret line="105" column="25" selection-start-line="105" selection-start-column="25" selection-end-line="105" selection-end-column="25" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -28,8 +29,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/chess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="885">
-              <caret line="531" column="37" selection-start-line="531" selection-start-column="37" selection-end-line="531" selection-end-column="37" />
+            <state relative-caret-position="497">
+              <caret line="541" column="1" selection-start-line="541" selection-start-column="1" selection-end-line="541" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -45,8 +46,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>math</find>
-      <find>1, 0</find>
       <find>(-2, 0)</find>
       <find>6</find>
       <find>-0.</find>
@@ -61,7 +60,6 @@
       <find>5, 3</find>
       <find>actions</find>
       <find>actions(</find>
-      <find>print</find>
       <find>-0.75</find>
       <find>.75</find>
       <find>0.75</find>
@@ -72,6 +70,12 @@
       <find>True</find>
       <find>(6, 4), (6, 1)</find>
       <find>inf</find>
+      <find>N</find>
+      <find>B</find>
+      <find>Q</find>
+      <find>0000</find>
+      <find>(4, 1), (5,</find>
+      <find>print</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -81,8 +85,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/../TicTacoToe/tictactoe.py" />
-        <option value="$PROJECT_DIR$/chess.py" />
         <option value="$PROJECT_DIR$/runner.py" />
+        <option value="$PROJECT_DIR$/chess.py" />
       </list>
     </option>
   </component>
@@ -202,7 +206,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.02739726" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -268,8 +271,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/runner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="75" column="103" selection-start-line="75" selection-start-column="103" selection-end-line="75" selection-end-column="103" />
+        <state relative-caret-position="579">
+          <caret line="105" column="25" selection-start-line="105" selection-start-column="25" selection-end-line="105" selection-end-column="25" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
@@ -278,8 +281,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/chess.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="885">
-          <caret line="531" column="37" selection-start-line="531" selection-start-column="37" selection-end-line="531" selection-end-column="37" />
+        <state relative-caret-position="497">
+          <caret line="541" column="1" selection-start-line="541" selection-start-column="1" selection-end-line="541" selection-end-column="1" />
         </state>
       </provider>
     </entry>

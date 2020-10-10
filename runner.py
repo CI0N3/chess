@@ -23,9 +23,9 @@ while True:
         print(chess.print_board(board))
         possible_user_actions = chess.actions(board, chess.W, 1, white_moves, black_moves)
         if not possible_user_actions:
-            if chess.utility(board, white_moves, black_moves) == 10000:
+            if chess.utility(board, white_moves, black_moves) == math.inf:
                 print("White Wins!")
-            elif chess.utility(board, white_moves, black_moves) == -10000:
+            elif chess.utility(board, white_moves, black_moves) == -math.inf:
                 print("Black Wins!")
             else:
                 print("Tie!")
@@ -39,58 +39,58 @@ while True:
                 if user_action in chess.actions(board, chess.W, 1, white_moves, black_moves):
                     white_moves += [user_action]
                     break
+                elif user_action + ["Q"] in chess.actions(board, chess.W, 1, white_moves, black_moves):
+                    while True:
+                        promotion = input("Knight, Bishop, Rook, or Queen? ")
+                        if promotion.lower() in ["knight", "n"]:
+                            promotion = chess.W_N
+                            break
+                        elif promotion.lower() in ["bishop", "b"]:
+                            promotion = chess.W_B
+                            break
+                        elif promotion.lower() in ["rook", "r"]:
+                            promotion = chess.W_R
+                            break
+                        elif promotion.lower() in ["queen", "q"]:
+                            promotion = chess.W_Q
+                            break
+                    white_moves += [user_action, promotion]
+                    break
             except (ValueError, IndexError) as Error:
                 pass
-        if board[user_action[0][0]][user_action[0][1]] == chess.W_P and user_action[1][0] == 0:
-            while True:
-                promotion = input("Knight, Bishop, Rook, or Queen? ")
-                if promotion in ["Knight", "knight"]:
-                    promotion = chess.W_N
-                    break
-                elif promotion in ["Bishop", "bishop"]:
-                    promotion = chess.W_B
-                    break
-                elif promotion in ["Rook", "rook"]:
-                    promotion = chess.W_R
-                    break
-                elif promotion in ["Queen", "queen"]:
-                    promotion = chess.W_Q
-                    break
-            board = chess.result(board, user_action, promotion)
-        else:
-            board = chess.result(board, user_action, None)
+        board = chess.result(board, user_action)
         ai_action = chess.minimax(board, depth, -math.inf, math.inf, chess.B, black_moves, white_moves)
         if not ai_action:
             print(chess.print_board(board))
-            if chess.utility(board, white_moves, black_moves) == 10000:
+            if chess.utility(board, white_moves, black_moves) == math.inf:
                 print("White Wins!")
-            elif chess.utility(board, white_moves, black_moves) == -10000:
+            elif chess.utility(board, white_moves, black_moves) == -math.inf:
                 print("Black Wins!")
             else:
                 print("Tie!")
             break
         black_moves += [ai_action]
-        board = chess.result(board, ai_action[0], ai_action[1])
+        board = chess.result(board, ai_action)
 
     if user_player == chess.B:
         ai_action = chess.minimax(board, depth, -math.inf, math.inf, chess.W, white_moves, black_moves)
         if not ai_action:
             print(chess.print_board(board))
-            if chess.utility(board, white_moves, black_moves) == 10000:
+            if chess.utility(board, white_moves, black_moves) == math.inf:
                 print("White Wins!")
-            elif chess.utility(board, white_moves, black_moves) == -10000:
+            elif chess.utility(board, white_moves, black_moves) == -math.inf:
                 print("Black Wins!")
             else:
                 print("Tie!")
             break
         white_moves += [ai_action]
-        board = chess.result(board, ai_action[0], ai_action[1])
+        board = chess.result(board, ai_action)
         print(chess.print_board(board))
         possible_user_actions = chess.actions(board, chess.B, 1, black_moves, white_moves)
         if not possible_user_actions:
-            if chess.utility(board, white_moves, black_moves) == 10000:
+            if chess.utility(board, white_moves, black_moves) == math.inf:
                 print("White Wins!")
-            elif chess.utility(board, white_moves, black_moves) == -10000:
+            elif chess.utility(board, white_moves, black_moves) == -math.inf:
                 print("Black Wins!")
             else:
                 print("Tie!")
@@ -104,23 +104,23 @@ while True:
                 if user_action in chess.actions(board, chess.B, 1, black_moves, white_moves):
                     black_moves += [user_action]
                     break
+                elif user_action + ["q"] in chess.actions(board, chess.B, 1, black_moves, white_moves):
+                    while True:
+                        promotion = input("Knight, Bishop, Rook, or Queen? ")
+                        if promotion.lower() in ["knight", "n"]:
+                            promotion = chess.B_N
+                            break
+                        elif promotion.lower() in ["bishop", "b"]:
+                            promotion = chess.B_B
+                            break
+                        elif promotion.lower() in ["rook", "r"]:
+                            promotion = chess.B_R
+                            break
+                        elif promotion.lower() in ["queen", "q"]:
+                            promotion = chess.B_Q
+                            break
+                    white_moves += [user_action, promotion]
+                    break
             except (ValueError, IndexError) as Error:
                 pass
-        if board[user_action[0][0]][user_action[0][1]] == chess.B_P and user_action[1][0] == 7:
-            while True:
-                promotion = input("Knight, Bishop, Rook, or Queen? ")
-                if promotion in ["Knight", "knight"]:
-                    promotion = chess.B_N
-                    break
-                elif promotion in ["Bishop", "bishop"]:
-                    promotion = chess.B_B
-                    break
-                elif promotion in ["Rook", "rook"]:
-                    promotion = chess.B_R
-                    break
-                elif promotion in ["Queen", "queen"]:
-                    promotion = chess.B_Q
-                    break
-            board = chess.result(board, user_action, promotion)
-        else:
-            board = chess.result(board, user_action, None)
+        board = chess.result(board, user_action)
