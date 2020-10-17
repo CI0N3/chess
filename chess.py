@@ -1,4 +1,5 @@
 import math
+import random
 
 E = "."
 W_P = "P"
@@ -27,6 +28,15 @@ def print_board(board):
 
 
 def initial_state():
+    return [[E, E, E, E, E, E, E, E],
+            [E, E, E, E, E, E, E, E],
+            [E, E, E, E, E, E, E, E],
+            [E, E, E, E, E, E, E, E],
+            [E, E, E, E, E, E, E, E],
+            [E, W_K, E, E, E, E, E, E],
+            [E, E, E, E, E, W_Q, E, E],
+            [B_K, E, E, E, E, E, E, E]]
+    """""
     return [[B_R, B_N, B_B, B_Q, B_K, B_B, B_N, B_R],
             [B_P, B_P, B_P, B_P, B_P, B_P, B_P, B_P],
             [E, E, E, E, E, E, E, E],
@@ -35,6 +45,7 @@ def initial_state():
             [E, E, E, E, E, E, E, E],
             [W_P, W_P, W_P, W_P, W_P, W_P, W_P, W_P],
             [W_R, W_N, W_B, W_Q, W_K, W_B, W_N, W_R]]
+    """""
 
 
 def check(board, player, player_moves, non_player_moves):
@@ -525,6 +536,35 @@ def minimax(board, depth, alpha, beta, player, player_moves, non_player_moves):
     negamax_value = negamax(board, depth, alpha, beta, player, non_player, player_moves, non_player_moves, depth)
     for i in range(1, depth):
         new_negamax_value = negamax(board, i, alpha, beta, player, non_player, player_moves, non_player_moves, i)
-        if new_negamax_value[0] == negamax_value[0]:
+        if new_negamax_value[0] in [math.inf, negamax_value[0]]:
             return new_negamax_value[1]
     return negamax_value[1]
+
+
+def init_zobrist():
+    table = []
+    for i in range(64):
+        row = []
+        for j in range(12):
+            row += [random.randint(0, 2**64-1)]
+        table += [row]
+    return table
+
+
+table = init_zobrist()
+
+
+def hash(board):
+    h = 0
+    for i in range(8):
+        for j in range(8):
+            if board[i][j] != E:
+                num = 0
+                for piece in W+B:
+                    if board[i][j] == piece:
+                        h = h ^ table[i*8+j][num]
+                    num += 1
+    return h
+
+
+#print(hash(initial_state()))
