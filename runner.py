@@ -2,7 +2,7 @@ import chess
 import math
 
 board = chess.initial_state()
-depth = 2  # Change this number to increase/decrease how many moves ahead the ai looks
+depth = 4  # Change this number to increase/decrease how many moves ahead the ai looks
 white_moves = []
 black_moves = []
 
@@ -16,7 +16,6 @@ while True:
         user_player = chess.B
         ai_player = chess.W
         break
-
 
 while True:
     if user_player == chess.W:
@@ -86,6 +85,7 @@ while True:
         white_moves += [ai_action]
         board = chess.result(board, ai_action)
         print(chess.print_board(board))
+        print(chess.transpositions)
         possible_user_actions = chess.actions(board, chess.B, 1, black_moves, white_moves)
         if not possible_user_actions:
             if chess.utility(board, white_moves, black_moves) == math.inf:

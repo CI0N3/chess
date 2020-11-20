@@ -1,5 +1,7 @@
 import math
 import random
+import cProfile
+import re
 
 E = "."
 W_P = "P"
@@ -18,6 +20,32 @@ B_K = "k"
 B = [B_P, B_B, B_N, B_R, B_Q, B_K]
 
 
+def init_zobrist():
+    table = []
+    for i in range(64):
+        row = []
+        for j in range(12):
+            row += [random.randint(0, 2**32)]
+        table += [row]
+    return table
+
+
+table = init_zobrist()
+
+
+def hash(board):
+    h = 0
+    for i in range(8):
+        for j in range(8):
+            if board[i][j] != E:
+                num = 0
+                for piece in W+B:
+                    if board[i][j] == piece:
+                        h = h ^ table[i*8+j][num]
+                    num += 1
+    return h
+
+
 def print_board(board):
     new_board = ""
     for i in range(8):
@@ -32,10 +60,10 @@ def initial_state():
             [E, E, E, E, E, E, E, E],
             [E, E, E, E, E, E, E, E],
             [E, E, E, E, E, E, E, E],
+            [E, E, E, E, E, E, B_Q, E],
             [E, E, E, E, E, E, E, E],
-            [E, W_K, E, E, E, E, E, E],
-            [E, E, E, E, E, W_Q, E, E],
-            [B_K, E, E, E, E, E, E, E]]
+            [E, E, E, E, E, B_K, E, E],
+            [E, E, E, E, E, E, E, W_K]]
     """""
     return [[B_R, B_N, B_B, B_Q, B_K, B_B, B_N, B_R],
             [B_P, B_P, B_P, B_P, B_P, B_P, B_P, B_P],
@@ -456,9 +484,9 @@ def utility(board, white_moves, black_moves):
                 B_Points += [[0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
                              [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
                              [0.5, 0.75, 0.5, 0.5, 0.5, 0.5, 0.75, 0.5],
-                             [0.5, 0.5, 0.75, 1, 1, 0.75, 0.5, 0.5],
-                             [0.5, 0.5, 0.75, 1.1, 1.1, 0.75, 0.5, 0.5],
-                             [0.5, 0.5, 0.75, 1.2, 1.2, 0.75, 0.5, 0.5],
+                             [0.6, 0.6, 0.75, 1, 1, 0.75, 0.6, 0.6],
+                             [0.6, 0.6, 0.75, 1.1, 1.1, 0.75, 0.6, 0.6],
+                             [0.6, 0.6, 0.75, 1.2, 1.2, 0.75, 0.6, 0.6],
                              [0.75, 0.75, 0.75, 1.3, 1.3, 0.75, 0.75, 0.75],
                              [1, 1, 1, 1.5, 1.5, 1, 1, 1]][i][j]
             if board[i][j] == B_N:
@@ -503,30 +531,67 @@ def terminal(board, player, player_moves, non_player_moves):
     return False
 
 
+transpositions = []
+
+
 def minimax(board, depth, alpha, beta, player, player_moves, non_player_moves):
 
     def negamax(board, new_depth, alpha, beta, player, non_player, player_moves, non_player_moves, max_depth):
+        global transpositions
         if new_depth == 0 or terminal(board, player, player_moves, non_player_moves):
             if player == W:
-                return utility(board, player_moves, non_player_moves)
+                return utility(board, player_moves, non_player_moves), []
             else:
-                return -utility(board, non_player_moves, player_moves)
+                return -utility(board, non_player_moves, player_moves), []
 
         new_action = []
         value = -math.inf
-        for action in actions(board, player, 1, player_moves, non_player_moves):
+        possible_actions = actions(board, player, 1, player_moves, non_player_moves)
+        print(possible_actions)
+
+        #for i in range(len(transpositions)):
+            #if transpositions[i][0] == hash(board):
+                #if transpositions[i][2] < new_depth:
+                    #alpha = transpositions[i][4]
+                    #beta = transpositions[i][5]
+                    #possible_actions.insert(0, transpositions[i][1])
+                #else:
+                    #return -transpositions[i][3], transpositions[i][1]
+
+        for hash_key in transpositions:
+            if hash_key[0] == hash(board):
+                possible_actions.insert(0, hash_key[1])
+
+
+
+
+
+        for action in possible_actions:
             new_player_moves = player_moves + [action]
-            new_negamax_value = -negamax(result(board, action), new_depth-1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves, max_depth)
-            if new_negamax_value > value:
+            new_negamax = negamax(result(board, action), new_depth-1, -beta, -alpha, non_player, player, non_player_moves, new_player_moves, max_depth)
+            new_negamax_value = -new_negamax[0]
+            if new_negamax_value > value or value == -math.inf:
                 value = new_negamax_value
                 new_action = action
             alpha = max(alpha, value)
             if alpha >= beta:
                 break
 
-        if new_depth == max_depth:
-            return value, new_action
-        return value
+        if hash(board) not in [hash_key[0] for hash_key in transpositions]:
+            transpositions += [[hash(board), new_action, new_depth, value]]
+        else:
+            for i in range(len(transpositions)):
+                if transpositions[i][0] == hash(board):
+                    if new_depth > transpositions[i][2]:
+                        new_transpositions = []
+                        for key in transpositions:
+                            if key[0] == hash(board):
+                                new_transpositions += [[hash(board), new_action, new_depth, value]]
+                            else:
+                                new_transpositions += key
+                        transpositions = new_transpositions
+
+        return value, new_action
 
     if player == W:
         non_player = B
@@ -534,37 +599,16 @@ def minimax(board, depth, alpha, beta, player, player_moves, non_player_moves):
         non_player = W
 
     negamax_value = negamax(board, depth, alpha, beta, player, non_player, player_moves, non_player_moves, depth)
+
     for i in range(1, depth):
         new_negamax_value = negamax(board, i, alpha, beta, player, non_player, player_moves, non_player_moves, i)
-        if new_negamax_value[0] in [math.inf, negamax_value[0]]:
+        if new_negamax_value[0] == math.inf:
             return new_negamax_value[1]
+        elif new_negamax_value[0] == negamax_value[0] and new_negamax_value[1]:
+            for hash_key in transpositions:
+                if hash_key[0] == hash(result(board, new_negamax_value[1])):
+                    if -hash_key[3] == negamax_value[0]:
+                        if hash_key[2] >= i:
+                            return new_negamax_value[1]
+
     return negamax_value[1]
-
-
-def init_zobrist():
-    table = []
-    for i in range(64):
-        row = []
-        for j in range(12):
-            row += [random.randint(0, 2**64-1)]
-        table += [row]
-    return table
-
-
-table = init_zobrist()
-
-
-def hash(board):
-    h = 0
-    for i in range(8):
-        for j in range(8):
-            if board[i][j] != E:
-                num = 0
-                for piece in W+B:
-                    if board[i][j] == piece:
-                        h = h ^ table[i*8+j][num]
-                    num += 1
-    return h
-
-
-#print(hash(initial_state()))
